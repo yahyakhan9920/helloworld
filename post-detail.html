@@ -195,16 +195,27 @@
             const code = Array.from(inputs).map(i => i.value).join('');
 
             if (AuthManager.verifyPasscode(code)) {
-                window.location.href = targetUrl;
-            } else {
+                // Success
+                error.textContent = "Verifying...";
+                error.style.color = "var(--success)";
                 error.style.opacity = '1';
+
+                setTimeout(() => {
+                    window.location.href = targetUrl;
+                }, 500);
+            } else {
+                // Error
+                error.textContent = "Incorrect passcode! Please try again.";
+                error.style.color = "var(--danger)";
+                error.style.opacity = '1';
+
                 modal.querySelector('.passcode-modal').classList.add('shake');
                 inputs.forEach(i => i.value = '');
                 inputs[0].focus();
+
                 setTimeout(() => {
                     modal.querySelector('.passcode-modal').classList.remove('shake');
-                    error.style.opacity = '0';
-                }, 1000);
+                }, 500);
             }
         }
 
