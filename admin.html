@@ -1,0 +1,185 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin Dashboard | HELLO WORLD CMS</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="css/style.css">
+</head>
+
+<body>
+
+    <div class="admin-wrapper">
+        <aside class="sidebar">
+            <div class="sidebar-logo">
+                <i class="fas fa-rocket" style="color: var(--primary);"></i>
+                <span>Admin Panel</span>
+            </div>
+            <ul class="sidebar-nav">
+                <li><a href="#" class="active" onclick="showSection('posts-manager')"><i class="fas fa-newspaper"></i>
+                        <span>Posts Manager</span></a></li>
+                <li><a href="#" onclick="showSection('create-post')"><i class="fas fa-plus-circle"></i> <span>Create New
+                            Post</span></a></li>
+                <li><a href="index.html"><i class="fas fa-external-link-alt"></i> <span>View Website</span></a></li>
+                <li style="margin-top: 2rem;"><a href="#" onclick="AuthManager.logout()"
+                        style="color: var(--danger);"><i class="fas fa-sign-out-alt"></i> <span>Logout</span></a></li>
+            </ul>
+        </aside>
+
+        <main class="admin-main">
+
+            <!-- Dashboard Stats -->
+            <div
+                style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 1.5rem; margin-bottom: 2.5rem;">
+                <div class="card" style="display: flex; align-items: center; gap: 1rem;">
+                    <div
+                        style="background: rgba(99, 102, 241, 0.1); color: var(--primary); width: 50px; height: 50px; border-radius: 12px; display: flex; align-items: center; justify-content: center; font-size: 1.5rem;">
+                        <i class="fas fa-newspaper"></i>
+                    </div>
+                    <div>
+                        <p style="color: var(--secondary); font-size: 0.85rem; font-weight: 600;">Total Posts</p>
+                        <h2 id="stat-total-posts">0</h2>
+                    </div>
+                </div>
+                <div class="card" style="display: flex; align-items: center; gap: 1rem;">
+                    <div
+                        style="background: rgba(34, 197, 94, 0.1); color: var(--success); width: 50px; height: 50px; border-radius: 12px; display: flex; align-items: center; justify-content: center; font-size: 1.5rem;">
+                        <i class="fas fa-users"></i>
+                    </div>
+                    <div>
+                        <p style="color: var(--secondary); font-size: 0.85rem; font-weight: 600;">Total Viewers</p>
+                        <h2 id="stat-total-viewers">0</h2>
+                    </div>
+                </div>
+                <div class="card" style="display: flex; align-items: center; gap: 1rem;">
+                    <div
+                        style="background: rgba(245, 158, 11, 0.1); color: var(--warning); width: 50px; height: 50px; border-radius: 12px; display: flex; align-items: center; justify-content: center; font-size: 1.5rem;">
+                        <i class="fas fa-paper-plane"></i>
+                    </div>
+                    <div>
+                        <p style="color: var(--secondary); font-size: 0.85rem; font-weight: 600;">Published</p>
+                        <h2 id="stat-published-posts">0</h2>
+                    </div>
+                </div>
+            </div>
+
+            <section id="posts-manager" class="admin-section fade-in">
+                <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 2rem;">
+                    <h2>Posts Manager</h2>
+                    <div style="display: flex; gap: 1rem; align-items: center;">
+                        <input type="text" id="search-posts" class="form-control" placeholder="Search posts..."
+                            style="width: 250px;">
+                        <button class="btn btn-primary" onclick="showSection('create-post')">
+                            <i class="fas fa-plus"></i> New Post
+                        </button>
+                    </div>
+                </div>
+
+                <div class="pages-grid" id="posts-list-container">
+                    <!-- Post cards will be injected here -->
+                </div>
+            </section>
+
+            <section id="create-post" class="admin-section fade-in" style="display: none;">
+                <div style="margin-bottom: 2rem;">
+                    <h2 id="form-title">Create New Post</h2>
+                    <p id="form-subtitle" style="color: var(--secondary);">Share your thoughts and stories with the
+                        world.</p>
+                </div>
+
+                <div class="card">
+                    <form id="post-form">
+                        <input type="hidden" id="edit-id">
+                        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1.5rem;">
+                            <div class="form-group">
+                                <label for="title">Post Title</label>
+                                <input type="text" id="title" class="form-control" placeholder="e.g. The Future of AI"
+                                    required>
+                                <div id="char-counter"
+                                    style="text-align: right; font-size: 0.8rem; color: var(--secondary); margin-top: 0.3rem;">
+                                    0 characters</div>
+                            </div>
+                            <div class="form-group">
+                                <label for="slug">Slug (URL)</label>
+                                <div
+                                    style="display: flex; align-items: center; background: var(--gray-100); border-radius: var(--radius); border: 1px solid var(--gray-200); padding-left: 1rem;">
+                                    <span
+                                        style="color: var(--secondary); font-size: 0.9rem;">/post-detail.html?s=</span>
+                                    <input type="text" id="slug" class="form-control"
+                                        style="background: transparent; border: none; box-shadow: none;" readonly>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="content">Post Content</label>
+                            <textarea id="content" class="form-control" placeholder="Write your content here..."
+                                required></textarea>
+                        </div>
+
+                        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1.5rem;">
+                            <div class="form-group">
+                                <label for="image-file">Feature Image</label>
+                                <input type="file" id="image-file" class="form-control" accept="image/*">
+                                <div id="image-preview" style="margin-top: 1rem; display: none;">
+                                    <img src=""
+                                        style="width: 100%; height: 150px; object-fit: cover; border-radius: var(--radius);">
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label for="document-file">Attach Document (Downloadable)</label>
+                                <input type="file" id="document-file" class="form-control">
+                                <div id="doc-name"
+                                    style="margin-top: 0.5rem; font-size: 0.85rem; color: var(--primary); font-weight: 600;">
+                                </div>
+                            </div>
+                        </div>
+
+                        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1.5rem;">
+                            <div class="form-group">
+                                <label for="status">Publication Status</label>
+                                <select id="status" class="form-control">
+                                    <option value="published">Published</option>
+                                    <option value="draft">Draft</option>
+                                </select>
+                            </div>
+                        </div>
+
+                        <div style="display: flex; justify-content: flex-end; gap: 1rem; margin-top: 1rem;">
+                            <button type="button" class="btn btn-outline"
+                                onclick="showSection('posts-manager')">Cancel</button>
+                            <button type="submit" class="btn btn-primary" id="save-btn">
+                                <i class="fas fa-paper-plane"></i> Publish Post
+                            </button>
+                        </div>
+                    </form>
+                </div>
+            </section>
+
+        </main>
+    </div>
+
+    <!-- Confirmation Modal -->
+    <div id="delete-modal"
+        style="display: none; position: fixed; top:0; left:0; width:100%; height:100%; background: rgba(0,0,0,0.5); z-index: 2000; align-items: center; justify-content: center;">
+        <div class="card" style="width: 400px; text-align: center;">
+            <i class="fas fa-exclamation-triangle"
+                style="font-size: 3rem; color: var(--danger); margin-bottom: 1rem;"></i>
+            <h3>Delete Post?</h3>
+            <p style="color: var(--secondary); margin: 1rem 0;">Are you sure you want to delete this post?</p>
+            <div style="display: flex; justify-content: center; gap: 1rem;">
+                <button class="btn btn-outline" onclick="closeDeleteModal()">Cancel</button>
+                <button class="btn btn-danger" id="confirm-delete-btn">Delete Now</button>
+            </div>
+        </div>
+    </div>
+
+    <script src="js/auth.js"></script>
+    <script src="js/posts.js"></script>
+    <script src="js/admin.js"></script>
+</body>
+
+</html>

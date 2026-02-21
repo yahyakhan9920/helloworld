@@ -1,0 +1,135 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title id="meta-title">Post Title | HELLO WORLD</title>
+    <meta name="description" id="meta-desc" content="">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="css/style.css">
+</head>
+
+<body>
+
+    <nav class="navbar">
+        <div class="container nav-content">
+            <a href="index.html" class="logo">HELLO WORLD.</a>
+            <ul class="nav-links">
+                <li><a href="index.html">Home</a></li>
+                <li><a href="posts.html">Posts</a></li>
+                <li><a href="about.html">About Us</a></li>
+                <li><a href="contact.html">Contact Us</a></li>
+            </ul>
+            <a href="admin.html" class="auth-btn">Admin Panel</a>
+        </div>
+    </nav>
+
+    <main class="container" style="margin-top: 3rem;">
+        <article class="fade-in" style="max-width: 800px; margin: 0 auto;">
+            <div id="post-image-container"></div>
+
+            <div
+                style="display: flex; gap: 1rem; color: var(--secondary); font-size: 0.9rem; margin-bottom: 1rem; align-items: center;">
+                <span id="post-date"></span>
+                <span>•</span>
+                <span><i class="fas fa-eye"></i> <span id="post-views">0</span> views</span>
+            </div>
+
+            <h1 id="post-title" style="font-size: 3rem; margin-bottom: 2rem;"></h1>
+
+            <div id="post-content" class="content-area"
+                style="font-size: 1.15rem; color: #334155; line-height: 1.8; margin-bottom: 4rem;">
+                <!-- Content will be injected here -->
+            </div>
+
+            <!-- Download Section -->
+            <div id="download-section"
+                style="display: none; border: 2px dashed var(--gray-200); padding: 2rem; border-radius: var(--radius); text-align: center;">
+                <i class="fas fa-file-download"
+                    style="font-size: 2.5rem; color: var(--primary); margin-bottom: 1rem;"></i>
+                <h3>Attached Resources</h3>
+                <p style="color: var(--secondary); margin-bottom: 1.5rem;">Download the additional documents provided
+                    with this post.</p>
+                <a id="download-btn" class="btn btn-primary">
+                    <i class="fas fa-download"></i> Download <span id="attachment-name"></span>
+                </a>
+            </div>
+        </article>
+    </main>
+
+    <footer
+        style="margin-top: 5rem; padding: 3rem 0; border-top: 1px solid var(--gray-200); text-align: center; color: var(--secondary);">
+        <p>&copy; 2024 HELLO WORLD CMS. All rights reserved.</p>
+    </footer>
+
+    <script src="js/auth.js"></script>
+    <script src="js/posts.js"></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            const params = new URLSearchParams(window.location.search);
+            const slug = params.get('s');
+
+            // Dynamic Admin Link
+            const adminBtn = document.querySelector('.auth-btn');
+            if (adminBtn) {
+                if (!AuthManager.isLoggedIn()) {
+                    adminBtn.href = 'login.html';
+                    adminBtn.textContent = 'Admin Login';
+                } else {
+                    adminBtn.href = 'admin.html';
+                    adminBtn.textContent = 'Dashboard';
+                }
+            }
+
+            if (slug) {
+                const post = PostManager.getPostBySlug(slug);
+                if (post) {
+                    // Increment Views
+                    PostManager.incrementPostViews(post.id);
+
+                    document.getElementById('post-title').textContent = post.title;
+                    document.getElementById('post-content').innerHTML = post.content.replace(/\n/g, '<br>');
+                    document.title = `${post.title} | HELLO WORLD`;
+                    document.getElementById('meta-desc').setAttribute('content', post.content.substring(0, 160));
+                    document.getElementById('post-date').textContent = new Date(post.createdAt).toLocaleDateString('en-US', { month: 'long', day: 'numeric', year: 'numeric' });
+                    document.getElementById('post-views').textContent = (post.views || 0) + 1; // Show current view
+
+                    if (post.image) {
+                        const img = document.createElement('img');
+                        img.src = post.image;
+                        img.className = "post-feature-img";
+                        img.style.width = '100%';
+                        img.style.height = '450px';
+                        img.style.objectFit = 'cover';
+                        img.style.borderRadius = 'var(--radius)';
+                        img.style.marginBottom = '2.5rem';
+                        img.style.boxShadow = 'var(--shadow-lg)';
+                        document.getElementById('post-image-container').appendChild(img);
+                    }
+
+                    // Handle Attachment
+                    if (post.attachment) {
+                        const downloadSec = document.getElementById('download-section');
+                        const downloadBtn = document.getElementById('download-btn');
+                        const nameSpan = document.getElementById('attachment-name');
+
+                        downloadSec.style.display = 'block';
+                        nameSpan.textContent = post.attachmentName;
+                        downloadBtn.href = post.attachment;
+                        downloadBtn.download = post.attachmentName;
+                    }
+
+                } else {
+                    document.getElementById('post-title').textContent = "Post Not Found";
+                    document.getElementById('post-content').textContent = "The requested post does not exist.";
+                }
+            } else {
+                window.location.href = 'index.html';
+            }
+        });
+    </script>
+</body>
+
+</html>

@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title id="meta-title">Page Title | HELLO WORLD</title>
+    <meta name="description" id="meta-desc" content="">
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <!-- Font Awesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="css/style.css">
+</head>
+
+<body>
+
+    <nav class="navbar">
+        <div class="container nav-content">
+            <a href="index.html" class="logo">HELLO WORLD.</a>
+            <ul class="nav-links" id="dynamic-nav">
+                <li><a href="index.html">Home</a></li>
+            </ul>
+            <a href="admin.html" class="auth-btn">Admin Panel</a>
+        </div>
+    </nav>
+
+    <main class="container" style="margin-top: 3rem;">
+        <article class="fade-in">
+            <div id="page-image-container"></div>
+            <h1 id="page-title" style="font-size: 3rem; margin-bottom: 2rem;"></h1>
+            <div id="page-content" class="content-area" style="font-size: 1.1rem; color: #334155; line-height: 1.8;">
+                <!-- Content will be injected here -->
+            </div>
+        </article>
+    </main>
+
+    <footer
+        style="margin-top: 5rem; padding: 3rem 0; border-top: 1px solid var(--gray-200); text-align: center; color: var(--secondary);">
+        <p>&copy; 2024 HELLO WORLD CMS. All rights reserved.</p>
+    </footer>
+
+    <script src="js/pages.js"></script>
+    <script src="js/main.js"></script>
+    <script>
+        // Specific logic for page.html to load content based on slug
+        document.addEventListener('DOMContentLoaded', () => {
+            const params = new URLSearchParams(window.location.search);
+            const slug = params.get('s');
+
+            if (slug) {
+                const page = PageManager.getPageBySlug(slug);
+                if (page) {
+                    document.getElementById('page-title').textContent = page.title;
+                    document.getElementById('page-content').innerHTML = page.content.replace(/\n/g, '<br>');
+                    document.title = `${page.title} | HELLO WORLD`;
+                    document.getElementById('meta-desc').setAttribute('content', page.content.substring(0, 160));
+
+                    if (page.image) {
+                        const img = document.createElement('img');
+                        img.src = page.image;
+                        img.style.width = '100%';
+                        img.style.height = '400px';
+                        img.style.objectFit = 'cover';
+                        img.style.borderRadius = 'var(--radius)';
+                        img.style.marginBottom = '2rem';
+                        img.style.boxShadow = 'var(--shadow-lg)';
+                        document.getElementById('page-image-container').appendChild(img);
+                    }
+                } else {
+                    document.getElementById('page-title').textContent = "Page Not Found";
+                    document.getElementById('page-content').textContent = "The requested page does not exist.";
+                }
+            } else {
+                window.location.href = 'index.html';
+            }
+        });
+    </script>
+</body>
+
+</html>
