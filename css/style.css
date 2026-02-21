@@ -93,7 +93,8 @@ button {
     color: var(--secondary);
 }
 
-.nav-links a:hover, .nav-links a.active {
+.nav-links a:hover,
+.nav-links a.active {
     color: var(--primary);
 }
 
@@ -150,7 +151,8 @@ button {
     font-weight: 500;
 }
 
-.sidebar-nav a:hover, .sidebar-nav a.active {
+.sidebar-nav a:hover,
+.sidebar-nav a.active {
     background: var(--gray-100);
     color: var(--primary);
 }
@@ -289,8 +291,15 @@ textarea.form-control {
 
 /* Animations */
 @keyframes fadeIn {
-    from { opacity: 0; transform: translateY(10px); }
-    to { opacity: 1; transform: translateY(0); }
+    from {
+        opacity: 0;
+        transform: translateY(10px);
+    }
+
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
 }
 
 .fade-in {
@@ -302,9 +311,11 @@ textarea.form-control {
     .sidebar {
         width: 80px;
     }
+
     .sidebar span {
         display: none;
     }
+
     .admin-main {
         margin-left: 80px;
     }
@@ -314,10 +325,97 @@ textarea.form-control {
     .sidebar {
         display: none;
     }
+
     .admin-main {
         margin-left: 0;
     }
+
     .nav-links {
         display: none;
     }
+}
+
+/* Passcode Modal */
+.modal-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(15, 23, 42, 0.8);
+    backdrop-filter: blur(8px);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 10000;
+    visibility: hidden;
+    opacity: 0;
+    transition: all 0.3s ease;
+}
+
+.modal-overlay.active {
+    visibility: visible;
+    opacity: 1;
+}
+
+.passcode-modal {
+    background: var(--white);
+    padding: 2.5rem;
+    border-radius: 24px;
+    width: 100%;
+    max-width: 400px;
+    text-align: center;
+    box-shadow: var(--shadow-lg);
+    transform: scale(0.9);
+    transition: all 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
+}
+
+.modal-overlay.active .passcode-modal {
+    transform: scale(1);
+}
+
+.passcode-inputs {
+    display: flex;
+    gap: 0.75rem;
+    justify-content: center;
+    margin: 2rem 0;
+}
+
+.passcode-input {
+    width: 45px;
+    height: 55px;
+    border: 2px solid var(--gray-200);
+    border-radius: 12px;
+    font-size: 1.5rem;
+    font-weight: 700;
+    text-align: center;
+    transition: all 0.2s;
+    background: var(--gray-100);
+}
+
+.passcode-input:focus {
+    border-color: var(--primary);
+    background: var(--white);
+    outline: none;
+    box-shadow: 0 0 0 4px rgba(99, 102, 241, 0.1);
+}
+
+@keyframes shake {
+
+    0%,
+    100% {
+        transform: translateX(0);
+    }
+
+    25% {
+        transform: translateX(-10px);
+    }
+
+    75% {
+        transform: translateX(10px);
+    }
+}
+
+.shake {
+    animation: shake 0.3s ease-in-out;
 }
