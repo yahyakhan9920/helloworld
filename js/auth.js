@@ -3,10 +3,15 @@
  */
 const AuthManager = {
     SESSION_KEY: 'hw_blog_session',
+    PASSCODE: '576432',
     // Updated admin credentials
     CREDENTIALS: {
         username: 'helloworld110',
         password: 'HelloAdmin1122@$'
+    },
+
+    verifyPasscode(code) {
+        return code === this.PASSCODE;
     },
 
     login(username, password) {
